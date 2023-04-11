@@ -1,0 +1,50 @@
+using System;
+using Math;
+using NUnit.Framework;
+
+namespace Testing.Math
+{
+    [TestFixture]
+    public class MatrixTests
+    {
+        private Matrix m1;
+        private Matrix m2;
+        
+        [SetUp]
+        public void Setup()
+        {
+            double[,] m1Data = {{1, 2}, {3, 4}};
+            m1 = new Matrix( m1Data );
+            
+            double[,] m2Data = {{4, 3}, {2, 1}};
+            m2 = new Matrix(m2Data);
+        }
+
+        [Test]
+        public void MatrixMultiplication()
+        {
+            var m3 = m1 * m2;
+
+            double[,] data1 = {{8, 5}, {20, 13}};
+            var resultant1 = new Matrix(data1);
+            Assert.That(resultant1 == m3);
+
+            var m4 = m2 * m1;
+
+            double[,] data2 = {{13, 20}, {5, 8}};
+            var resultant2 = new Matrix(data2);
+            Console.WriteLine(resultant2.ToString());
+            Console.WriteLine(m4.ToString());
+            Assert.That(m4 == resultant2);
+        }
+
+        [Test]
+        public void MatrixScalarMultiplication()
+        {
+            double factor = 2f;
+
+
+            Assert.Pass();
+        }
+    }
+}

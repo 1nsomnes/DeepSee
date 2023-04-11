@@ -1,7 +1,8 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=29737586_002Df555_002D476f_002Da3bc_002Db10c8ab2e159/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="MatrixTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;NUnit3x::4E8E1797-767E-429D-A382-0E7D13E52D6F::net5.0::Testing.MatrixTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::4E8E1797-767E-429D-A382-0E7D13E52D6F::net5.0::Testing.Math.MatrixTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::4E8E1797-767E-429D-A382-0E7D13E52D6F::net5.0::Testing.Math.MatrixExceptionsTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>
