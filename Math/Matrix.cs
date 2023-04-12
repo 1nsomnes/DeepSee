@@ -93,21 +93,18 @@ namespace Math
             var m2Data = m2.Get();
 
             var resultant = new Matrix(m1.Rows, m2.Columns);
-
-            for (int row = 0; row < resultant.Rows; row++)
+            
+            MatrixIterator(resultant, (row, column) =>
             {
-                for (int column = 0; column < resultant.Columns; column++)
-                {
-                    double sum = 0;
+                double sum = 0;
                     
-                    for (int count = 0; count < m1.Columns; count++)
-                    {
-                        sum += m1Data[row, count] * m2Data[count, column];
-                    }
-
-                    resultant.SetElement(row, column, sum);
+                for (int count = 0; count < m1.Columns; count++)
+                {
+                    sum += m1Data[row, count] * m2Data[count, column];
                 }
-            }
+
+                resultant.SetElement(row, column, sum);
+            });
 
             return resultant;
         }
@@ -131,18 +128,16 @@ namespace Math
             return ApplyScalarMatrixMultiplication(factor, m2);
         }
 
-        private static Matrix ApplyScalarMatrixMultiplication(double factor, Matrix m2)
+        private static Matrix ApplyScalarMatrixMultiplication(double factor, Matrix matrix)
         {
-            var resultant = new Matrix(m2.Rows, m2.Columns);
-
-            for (int row = 0; row < m2.Rows; row++)
+            var resultant = new Matrix(matrix.Rows, matrix.Columns);
+            
+            MatrixIterator(matrix, (row, column) =>
             {
-                for (int column = 0; column < m2.Columns; column++)
-                {
-                    var value = m2.GetElement(row, column) * factor;
-                    resultant.SetElement(row, column, value);
-                }
-            }
+                var value = matrix.GetElement(row, column) * factor;
+                resultant.SetElement(row, column, value);
+            });
+            
             return resultant;
         }
         
@@ -151,15 +146,12 @@ namespace Math
             AreMatricesTheSameSize(m1,m2);
 
             var resultant = new Matrix(m1.Rows, m1.Columns);
-
-            for (int row = 0; row < m2.Rows; row++)
+            
+            MatrixIterator(m1, (row, column) =>
             {
-                for (int column = 0; column < m1.Columns; column++)
-                {
-                    var value = m1.GetElement(row, column) + m2.GetElement(row, column);
-                    resultant.SetElement(row, column, value);
-                }
-            }
+                var value = m1.GetElement(row, column) + m2.GetElement(row, column);
+                resultant.SetElement(row, column, value);
+            });
 
             return resultant;
         }
@@ -176,6 +168,17 @@ namespace Math
         {
             m2 = m2 * -1;
             return m1 + m2;
+        }
+
+        private static void MatrixIterator(Matrix matrix, Action<int, int> code)
+        {
+            for (int row = 0; row < matrix.Rows; row++)
+            {
+                for (int column = 0; column < matrix.Columns; column++)
+                {
+                    code.Invoke(row, column);
+                }
+            }
         }
 
         public static bool operator ==(Matrix m1, Matrix m2)
