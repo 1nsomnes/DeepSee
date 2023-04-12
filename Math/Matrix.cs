@@ -131,7 +131,7 @@ namespace Math
             return ApplyScalarMatrixMultiplication(factor, m2);
         }
 
-        public static Matrix ApplyScalarMatrixMultiplication(double factor, Matrix m2)
+        private static Matrix ApplyScalarMatrixMultiplication(double factor, Matrix m2)
         {
             var resultant = new Matrix(m2.Rows, m2.Columns);
 
@@ -145,6 +145,38 @@ namespace Math
             }
             return resultant;
         }
+        
+        public static Matrix operator +(Matrix m1, Matrix m2)
+        {
+            AreMatricesTheSameSize(m1,m2);
+
+            var resultant = new Matrix(m1.Rows, m1.Columns);
+
+            for (int row = 0; row < m2.Rows; row++)
+            {
+                for (int column = 0; column < m1.Columns; column++)
+                {
+                    var value = m1.GetElement(row, column) + m2.GetElement(row, column);
+                    resultant.SetElement(row, column, value);
+                }
+            }
+
+            return resultant;
+        }
+
+        private static void AreMatricesTheSameSize(Matrix m1, Matrix m2)
+        {
+            if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
+            {
+                throw new ArgumentException("Matrices must be the same size to be added together");
+            }
+        }
+        
+        public static Matrix operator -(Matrix m1, Matrix m2)
+        {
+            m2 = m2 * -1;
+            return m1 + m2;
+        }
 
         public static bool operator ==(Matrix m1, Matrix m2)
         {
@@ -154,11 +186,6 @@ namespace Math
         public static bool operator !=(Matrix m1, Matrix m2)
         {
             return !m1.ToString().Equals(m2.ToString());
-        }
-        
-        public static Matrix operator +(Matrix m1, Matrix m2)
-        {
-            throw new NotImplementedException();
         }
     }
 }

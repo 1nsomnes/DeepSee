@@ -52,5 +52,23 @@ namespace Testing.Math
             var resultant2 = new Matrix(data2);
             Assert.That(m4 == resultant2);
         }
+
+        [Test]
+        public void MatrixAddition()
+        {
+            var m3 = m1 + m2;
+            double[,] data1 = {{5, 5}, {5, 5}};
+            var resultant1 = new Matrix(data1);
+            Assert.That(resultant1 == m3);
+        }
+
+        [Test]
+        public void MatrixSubtraction()
+        {
+            var m3 = m1 - m2;
+            double[,] data1 = {{-3, -1}, {1, 3}};
+            var resultant1 = new Matrix(data1);
+            Assert.That(resultant1 == m3);
+        }
     }
 }
