@@ -33,8 +33,6 @@ namespace Testing.Math
 
             double[,] data2 = {{13, 20}, {5, 8}};
             var resultant2 = new Matrix(data2);
-            Console.WriteLine(resultant2.ToString());
-            Console.WriteLine(m4.ToString());
             Assert.That(m4 == resultant2);
         }
 
@@ -43,8 +41,16 @@ namespace Testing.Math
         {
             double factor = 2f;
 
+            var m3 = factor * m1;
+            double[,] data1 = {{2, 4}, {6, 8}};
+            var resultant1 = new Matrix(data1);
+            Assert.That(resultant1 == m3);
+            
 
-            Assert.Pass();
+            var m4 = factor * m2;
+            double[,] data2 = {{8, 6}, {4, 2}};
+            var resultant2 = new Matrix(data2);
+            Assert.That(m4 == resultant2);
         }
     }
 }

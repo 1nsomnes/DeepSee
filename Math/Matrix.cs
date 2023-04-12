@@ -121,10 +121,29 @@ namespace Math
             }
         }
         
-        //TODO: make the operator associative! 
         public static Matrix operator *(double factor, Matrix m2)
         {
-            throw new NotImplementedException();
+            return ApplyScalarMatrixMultiplication(factor, m2);
+        }
+
+        public static Matrix operator *(Matrix m2, double factor)
+        {
+            return ApplyScalarMatrixMultiplication(factor, m2);
+        }
+
+        public static Matrix ApplyScalarMatrixMultiplication(double factor, Matrix m2)
+        {
+            var resultant = new Matrix(m2.Rows, m2.Columns);
+
+            for (int row = 0; row < m2.Rows; row++)
+            {
+                for (int column = 0; column < m2.Columns; column++)
+                {
+                    var value = m2.GetElement(row, column) * factor;
+                    resultant.SetElement(row, column, value);
+                }
+            }
+            return resultant;
         }
 
         public static bool operator ==(Matrix m1, Matrix m2)
