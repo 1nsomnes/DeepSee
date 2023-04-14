@@ -70,5 +70,18 @@ namespace Testing.Math
             var resultant1 = new Matrix(data1);
             Assert.That(resultant1 == m3);
         }
+
+        [Test]
+        public void MatrixOperation()
+        {
+            double[,] mData = {{1, 2}, {3, 4}};
+            var m = new Matrix( mData );
+            
+            m.ApplyOperation(d => { return d * 2f; });
+            
+            double[,] data = {{2, 4}, {6, 8}};
+            var resultant = new Matrix(data);
+            Assert.That(resultant == m);
+        }
     }
 }

@@ -85,6 +85,14 @@ namespace Math
             return result.ToString();
         }
 
+        public void ApplyOperation(Func<double, double> operation)
+        {
+            MatrixIterator(this, (row, column) =>
+            {
+                data[row, column] = operation.Invoke(data[row, column]);
+            });
+        }
+
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
             AreMatricesMultiplicable(m1, m2);

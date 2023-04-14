@@ -8,9 +8,9 @@ namespace DeepSee.Layers
         //neurons must always be in the same order as there respective weights in
         //the neuron class
         private Neuron[] neurons;
-        private Func<double> activation;
+        private Func<double, double> activation;
 
-        public Layer(int numberOfNeurons, Func<double> activation)
+        public Layer(int numberOfNeurons, Func<double, double> activation)
         {
             throw new NotImplementedException();
         }
