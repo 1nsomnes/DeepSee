@@ -34,7 +34,7 @@ namespace DeepSee.Models
 
         public override void Train(Matrix[] inputs, Matrix[] expected)
         {
-            AreInputsAndExpectedSameSize();
+            AreInputsAndExpectedSameSize(inputs, expected);
             AreAllLayersInitialized();
             
             InitializeValues();
@@ -94,21 +94,24 @@ namespace DeepSee.Models
             }
         }
 
-        private void AreInputsAndExpectedSameSize()
+        private void AreInputsAndExpectedSameSize(Matrix[] inputs, Matrix[] expected)
         {
-            throw new NotImplementedException();
+            if (inputs.Length != expected.Length)
+            {
+                throw new ArgumentException(
+                    "Training samples and expected results should have the same number of items.");
+            }
         }
         
         public void InitializeValues()
         {
-            //todo write the code for this (Xander Initilization?)
-
             for (int i = 1; i < layers.Length; i++)
             {
-                layers[i].InitializeNeuronWeights(layers[i-1].NeuronCount());
+                layers[i].InitializeNeuronWeights(layers[i-1].NeuronCount(), settings.WeightInitializationFunction);
             }
         }
 
+        //step
         public void UpdateWeightsAndBiases(Matrix gradient)
         {
             throw new NotImplementedException();
@@ -116,6 +119,16 @@ namespace DeepSee.Models
         
         public Matrix NetworkIteration(Matrix input, Matrix expected)
         {
+            layers[0].InputValues(input);
+
+            for (int i = 0; i <= layers.Length; i++)
+            {
+                Matrix newValues = layers[i].CalculateNextLayerValues(layers[i + 1]);
+                layers[i + 1].InputValues(newValues);
+            }
+            
+            //todo: calculate back propagation
+            
             throw new NotImplementedException();
         }
 

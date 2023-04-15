@@ -16,11 +16,24 @@ namespace DeepSee.Layers
             this.activation = activation;
         }
         
-        public void InitializeNeuronWeights(int numberOfWeights)
+        // rows x columns / # of neurons x 1
+        public void InputValues(Matrix matrix)
+        {
+            for (int i = 0; i < matrix.Rows; i++)
+            {
+                neurons[i].Value = matrix.GetElement(i, 0);
+            }
+        }
+        
+        public void InitializeNeuronWeights(int numberOfWeights, Func<double> initializationFunction)
         {
             foreach (Neuron neuron in neurons)
             {
-                neuron. Weights = new double[numberOfWeights];
+                neuron.Weights = new double[numberOfWeights];
+                for(int i = 0; i < numberOfWeights; i++)
+                {
+                    neuron.Weights[i] = initializationFunction();
+                }
             }
         }
 
