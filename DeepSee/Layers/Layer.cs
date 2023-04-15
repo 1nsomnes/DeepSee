@@ -18,9 +18,9 @@ namespace DeepSee.Layers
         
         public void InitializeNeuronWeights(int numberOfWeights)
         {
-            foreach (Neuron n in neurons)
+            foreach (Neuron neuron in neurons)
             {
-                n.SetWeights(new double[numberOfWeights]);
+                neuron. Weights = new double[numberOfWeights];
             }
         }
 
@@ -47,7 +47,7 @@ namespace DeepSee.Layers
             {
                 for (int column = 0; column < weightMatrix.Columns; column++)
                 {
-                    weightMatrix.SetElement(row, column, neurons[column].GetWeight(row));
+                    weightMatrix.SetElement(row, column, neurons[column].Weights[row]);
                 }
             }
 
@@ -60,7 +60,7 @@ namespace DeepSee.Layers
 
             for (int index = 0; index < neurons.Length; index++)
             {
-                biasMatrix.SetElement(index,0, neurons[index].GetBias());
+                biasMatrix.SetElement(index,0, neurons[index].Bias);
             }
 
             return biasMatrix;
@@ -72,7 +72,7 @@ namespace DeepSee.Layers
 
             for (int index = 0; index < neurons.Length; index++)
             {
-                values[index, 0] = neurons[index].GetValue();
+                values[index, 0] = neurons[index].Value;
             }
 
             return new Matrix(values);
