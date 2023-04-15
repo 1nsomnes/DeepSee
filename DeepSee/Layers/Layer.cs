@@ -8,11 +8,25 @@ namespace DeepSee.Layers
         //neurons must always be in the same order as there respective weights in
         //the neuron class
         private Neuron[] neurons;
-        private Func<double, double> activation;
+        public Func<double, double> activation { get; }
 
         public Layer(int numberOfNeurons, Func<double, double> activation)
         {
-            throw new NotImplementedException();
+            neurons = new Neuron[numberOfNeurons];
+            this.activation = activation;
+        }
+        
+        public void InitializeNeuronWeights(int numberOfWeights)
+        {
+            foreach (Neuron n in neurons)
+            {
+                n.SetWeights(new double[numberOfWeights]);
+            }
+        }
+
+        public int NeuronCount()
+        {
+            return neurons.Length;
         }
 
         public Matrix CalculateNextLayerValues(Layer nextLayer)
@@ -20,7 +34,7 @@ namespace DeepSee.Layers
             var newMatrix = nextLayer.GetWeightMatrix(neurons.Length) * GetNeuronValuesMatrix();
             newMatrix = newMatrix + nextLayer.GetBiasesMatrix();
             
-            //todo: apply activation operation
+            newMatrix.ApplyOperation(nextLayer.activation);
 
             return newMatrix;
         }
