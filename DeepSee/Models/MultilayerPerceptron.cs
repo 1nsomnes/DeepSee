@@ -120,7 +120,8 @@ namespace DeepSee.Models
         public Matrix NetworkIteration(Matrix input, Matrix expected)
         {
             layers[0].InputValues(input);
-
+            
+            //Forward Pass
             for (int i = 0; i <= layers.Length; i++)
             {
                 Matrix newValues = layers[i].CalculateNextLayerValues(layers[i + 1]);
