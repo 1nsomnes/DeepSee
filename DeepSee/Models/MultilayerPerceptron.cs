@@ -43,8 +43,6 @@ namespace DeepSee.Models
             int[] indices = Enumerable.Range(0, inputs.Length).ToArray();
             rng.Shuffle(indices);
 
-            Matrix avgGradient = NetworkIteration(null, null);
-
             int epochs = 0;
             int dataIndex = 1;
             while (epochs < settings.Epochs)
@@ -58,26 +56,13 @@ namespace DeepSee.Models
                         epochs++;
                     }
                     
-                    var gradientIteration = NetworkIteration(null, null);
-                    avgGradient = avgGradient + gradientIteration;
-                    avgGradient = avgGradient * 0.5f;
+                    NetworkIteration(inputs[dataIndex], expected[dataIndex]);
 
                     dataIndex++;
                 }
                 
                 //step
                 UpdateWeightsAndBiases(null);
-                
-                // we don't want to average the first gradient, so we must step the dataIndex.
-                if (dataIndex >= inputs.Length)
-                {
-                    rng.Shuffle(indices);
-                    dataIndex = 0;
-                    epochs++;
-                }
-                
-                avgGradient = NetworkIteration(null, null);
-                dataIndex++;
             }
 
             throw new NotImplementedException();
@@ -103,7 +88,7 @@ namespace DeepSee.Models
             }
         }
         
-        public void InitializeValues()
+        private void InitializeValues()
         {
             for (int i = 1; i < layers.Length; i++)
             {
@@ -112,25 +97,55 @@ namespace DeepSee.Models
         }
 
         //step
-        public void UpdateWeightsAndBiases(Matrix gradient)
+        private void UpdateWeightsAndBiases(Matrix gradient)
         {
             throw new NotImplementedException();
         }
         
-        public Matrix NetworkIteration(Matrix input, Matrix expected)
+        private void NetworkIteration(Matrix input, Matrix expected)
         {
             layers[0].InputValues(input);
+
+            ForwardPass();
+            BackPropagation(expected);
             
-            //Forward Pass
-            for (int i = 0; i <= layers.Length; i++)
+        }
+
+        private void ForwardPass()
+        {
+            for (int i = 0; i < layers.Length - 1; i++)
             {
-                Matrix newValues = layers[i].CalculateNextLayerValues(layers[i + 1]);
-                layers[i + 1].InputValues(newValues);
+                layers[i].CalculateNextLayerValues(layers[i + 1]);
+            }
+        }
+
+        private void BackPropagation(Matrix expected)
+        {
+            //calculate derivative for last layer
+            var lastLayer = layers[^1];
+            var lastNeurons = lastLayer.neurons;
+            for (int i = 0; i < lastNeurons.Length; i++)
+            {
+                //advanced mathematics 
+                var dzds = lastLayer.dActivation(lastNeurons[i].Z);
+                var dBias = -2 * (expected.GetElement(i, 0) - lastNeurons[i].Value) * dzds;
+
+                lastNeurons[i].dBias += dBias;
+                
+                var weights = lastNeurons[i].Weights;
+                
+                //index for weights
+                for (int j = 0; j < weights.Length; j++)
+                {
+                    lastNeurons[i].dWeights[j] += dBias * layers[^2].neurons[j].Value;
+                }
             }
             
-            //todo: calculate back propagation
-            
-            throw new NotImplementedException();
+            //calculate derivative for all remaining layers
+            for (int i = layers.Length - 2; i >= 0; i--)
+            {
+                
+            }
         }
 
         public override Matrix[] Predict(Matrix[] input)

@@ -5,15 +5,19 @@ namespace DeepSee.Layers
 {
     public class Layer
     {
-        //neurons must always be in the same order as there respective weights in
-        //the neuron class
-        private Neuron[] neurons;
-        public Func<double, double> activation { get; }
+        /*
+         * neurons must always be in the same order as there respective weights in
+         * the neuron class
+         */
+        public Neuron[] neurons;
+        private Func<double, double> activation { get; }
+        public Func<double, double> dActivation;
 
-        public Layer(int numberOfNeurons, Func<double, double> activation)
+        public Layer(int numberOfNeurons, Func<double, double> activation, Func<double, double> dActivation)
         {
             neurons = new Neuron[numberOfNeurons];
             this.activation = activation;
+            this.dActivation = dActivation;
         }
         
         // rows x columns / # of neurons x 1
@@ -42,14 +46,20 @@ namespace DeepSee.Layers
             return neurons.Length;
         }
 
-        public Matrix CalculateNextLayerValues(Layer nextLayer)
+        public void CalculateNextLayerValues(Layer nextLayer)
         {
             var newMatrix = nextLayer.GetWeightMatrix(neurons.Length) * GetNeuronValuesMatrix();
             newMatrix = newMatrix + nextLayer.GetBiasesMatrix();
             
-            newMatrix.ApplyOperation(nextLayer.activation);
+            //set z values in neuron (pre-activation value)
+            for (int i = 0; i < nextLayer.NeuronCount(); i++)
+            {
+                nextLayer.neurons[i].Z = newMatrix.GetElement(i, 0);
+            }
 
-            return newMatrix;
+            newMatrix.ApplyOperation(nextLayer.activation);
+            
+            nextLayer.InputValues(newMatrix);
         }
 
         public Matrix GetWeightMatrix(int previousLayerNeuronCount)
