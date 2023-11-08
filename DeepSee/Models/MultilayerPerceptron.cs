@@ -62,7 +62,7 @@ namespace DeepSee.Models
                 }
                 
                 //step
-                UpdateWeightsAndBiases(null);
+                UpdateWeightsAndBiases();
             }
 
             throw new NotImplementedException();
@@ -90,15 +90,16 @@ namespace DeepSee.Models
         
         private void InitializeValues()
         {
-            for (int i = 1; i < layers.Length; i++)
+            for (int i = 0; i < layers.Length; i++)
             {
-                layers[i].InitializeNeuronWeights(layers[i-1].NeuronCount(), settings.WeightInitializationFunction);
+                layers[i].InitializeNeuronWeights(layers[i].NeuronCount(), settings.WeightInitializationFunction);
             }
         }
 
         //step
-        private void UpdateWeightsAndBiases(Matrix gradient)
-        {
+        private void UpdateWeightsAndBiases()
+        {   
+            //todo: make sure you average the gradients by dividing the # of batches 
             throw new NotImplementedException();
         }
         
@@ -122,12 +123,14 @@ namespace DeepSee.Models
         private void BackPropagation(Matrix expected)
         {
             //calculate derivative for last layer
+            //specifically designed for square difference error
+            //not customizable lol
             var lastLayer = layers[^1];
             var lastNeurons = lastLayer.neurons;
             for (int i = 0; i < lastNeurons.Length; i++)
             {
                 //advanced mathematics 
-                var dzds = lastLayer.dActivation(lastNeurons[i].Z);
+                var dzds = lastLayer.dActivation(lastNeurons[i].Z); //derivative of z w/ respect to sigmoid
                 var dBias = -2 * (expected.GetElement(i, 0) - lastNeurons[i].Value) * dzds;
 
                 lastNeurons[i].dBias += dBias;
@@ -137,15 +140,25 @@ namespace DeepSee.Models
                 //index for weights
                 for (int j = 0; j < weights.Length; j++)
                 {
-                    lastNeurons[i].dWeights[j] += dBias * layers[^2].neurons[j].Value;
+                    layers[^2].neurons[j].dWeights[i] = dBias * layers[^2].neurons[j].Value;
+                    //lastNeurons[i].dWeights[j] += dBias * layers[^2].neurons[j].Value; 
                 }
             }
             
-            //calculate derivative for all remaining layers
-            for (int i = layers.Length - 2; i >= 0; i--)
+            //if it's a two layer network we're done calculating derivatives 
+            if (layers.Length == 2) return;
+
+            /*for (int layerIndex = layers.Length - 1; layerIndex > 0; layerIndex--)
             {
-                
+                var currentLayer = layers[layerIndex];
+            }*/
+            
+            //calculate derivative for all other layers 
+            for(int layerIndex = layers.Length - 2; layerIndex > 0; layerIndex--)
+            {
+                 
             }
+
         }
 
         public override Matrix[] Predict(Matrix[] input)
